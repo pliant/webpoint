@@ -12,7 +12,8 @@
   ;; Keep java source and project definition out of the artifact
   :jar-exclusions [#"^\." #"^*\/\." #"\.java$" #"project\.clj"]
 
-  :dependencies [[org.clojure/clojure "1.3.0"]
+  :dependencies [[pliant/process "0.1.1-SNAPSHOT"]
+                 [org.clojure/clojure "1.3.0"]
                  [compojure "1.1.5"]
                  [ring/ring-core "1.1.7"]
                  [org.clojure/tools.logging "0.2.3"]

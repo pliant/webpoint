@@ -13,8 +13,10 @@
   :jar-exclusions [#"^\." #"^*\/\." #"\.java$" #"project\.clj"]
 
   :dependencies [[pliant/process "0.1.1-SNAPSHOT"]
-                 [org.clojure/clojure "1.3.0"]
-                 [compojure "1.1.5"]
-                 [ring/ring-core "1.1.7"]
-                 [org.clojure/tools.logging "0.2.3"]
-                 [org.clojure/data.json "0.1.2"]])
+                 [org.clojure/clojure "1.4.0"]
+                 [compojure "1.1.6"]
+                 [ring/ring-core "1.2.1"]
+                 [org.clojure/tools.logging "0.2.6"]
+                 [org.clojure/data.json "0.2.3"]]
+  
+  :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]]} })

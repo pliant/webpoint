@@ -1,15 +1,21 @@
 (ns pliant.webpoint.response
   (:use pliant.webpoint.common
         [pliant.process :only (defprocess)]
-        [clojure.data.json :only (pprint-json)])
+        [clojure.data.json :only (write-str)])
   (:require [ring.util.response :as ring]
             [clojure.tools.logging :as logging]))
+
+(defn respond-with-html
+  [body request]
+  (if (ring/response? body)
+    (ring/content-type body mime-html)
+    (ring/content-type (ring/response body) mime-html)))
 
 (defn respond-with-json
   [body request]
   (if (ring/response? body)
-    (ring/content-type (update-in body [:body] (fn [b] (with-out-str (pprint-json b)))) mime-json)
-    (ring/content-type (ring/response (with-out-str (pprint-json body))) mime-json)))
+    (ring/content-type (update-in body [:body] (fn [b] (write-str b))) mime-json)
+    (ring/content-type (ring/response (write-str body)) mime-json)))
 
 (defn respond-with-clojure
   [body request]
@@ -17,21 +23,6 @@
     (ring/content-type (update-in body [:body] (fn [b] (with-out-str (prn b)))) mime-clojure)
     (ring/content-type (ring/response (with-out-str (prn body))) mime-clojure)))
 
-(defn format-response-body
-  [body request]
-  (let [requested-content-type (or (:content-type request) "NA")]
-    (cond
-     (and (ring/response? body) (not (empty? (:headers body))))
-       body
-     (json-requested? requested-content-type)
-       (if (ring/response? body)
-         (ring/content-type (update-in body [:body] (fn [b] (with-out-str (pprint-json b)))) requested-content-type)
-         (ring/content-type (ring/response (with-out-str (pprint-json body))) requested-content-type))
-     (or (map? body) (clojure-requested? requested-content-type))
-       (if (ring/response? body)
-         (ring/content-type (update-in body [:body] (fn [b] (with-out-str (prn b)))) mime-clojure)
-         (ring/content-type (ring/response (with-out-str (prn body))) mime-clojure))
-     :else body)))
 
 (defn respond-type
   [request body] 
@@ -62,7 +53,7 @@
 
 (defmethod respond :default
   [request body]
-  body)
+  (ring/response body))
 
 
 (defmulti respond-in-error (fn [request status body] (respond-type request body)))

@@ -61,34 +61,36 @@
 
 (defn log-request
   [request cleaner]
-  (logging/debug "---------- ---------- ---------- ---------- ---------- ---------- ----------" )
-  (logging/debug (str "REQUEST KEYS: " (keys request)))
-  (logging/debug (str "METHOD:       " (:request-method request)))
-  (logging/debug (str "URI:          " (:uri request)))
-  (logging/debug (str "CONTENT-TYPE: " (:content-type request)))
-  (logging/debug (str "CONTEXT:      " (:context request)))
-  (logging/debug (str "PATH-INFO:    " (:path-info request)))
-  (logging/debug (str "QUERY-PARAMS: " (cleaner request (:query-params request))))
-  (logging/debug (str "PARAMS:       " (cleaner request (:params request))))
-  (logging/debug (str "FORM-PARAMS:  " (cleaner request (:form-params request))))
-  (logging/debug (str "BODY-PARAMS:  " (cleaner request (:body-params request))))
+  (logging/debug (str "========== REQUEST ==========" \newline
+                      \tab "REQUEST KEYS: " (keys request) \newline
+                      \tab "METHOD:       " (:request-method request) \newline
+                      \tab "URI:          " (:uri request) \newline
+                      \tab "CONTENT-TYPE: " (:content-type request) \newline
+                      \tab "CONTEXT:      " (:context request) \newline
+                      \tab "PATH-INFO:    " (:path-info request) \newline
+                      \tab "QUERY-PARAMS: " (cleaner request (:query-params request)) \newline
+                      \tab "PARAMS:       " (cleaner request (:params request)) \newline
+                      \tab "FORM-PARAMS:  " (cleaner request (:form-params request)) \newline
+                      \tab "BODY-PARAMS:  " (cleaner request (:body-params request)) \newline))
   request)
 
 (defn log-response
   [response cleaner]
-  (logging/debug "========== ========== ========== ========== ========== ========== ==========" )
-  (logging/debug (str "RESPONSE:     " (cleaner response)))
-  (logging/debug "---------- ---------- ---------- ---------- ---------- ---------- ----------" )
+  (logging/debug (str "---------- RESPONSE ----------" \newline
+                      \tab (cleaner response) \newline
+                      "========== END REQUEST ==========" \newline))
   response)
 
 (defn wrap-log-request
   "Middleware that will log the attributes of the request."
   [handler & {:as opts}]
-  (fn [request]
-    (-> request
-        (log-request (:request-cleaner opts log-request-cleaner))
-        handler
-        (log-response (:response-cleaner opts log-response-cleaner)))))
+  (if (logging/enabled? :debug)
+    (fn [request]
+      (-> request
+          (log-request (:request-cleaner opts log-request-cleaner))
+          handler
+          (log-response (:response-cleaner opts log-response-cleaner))))
+    handler))
 
 
 ;; ---------- ---------- ---------- ---------- ---------- ---------- ----------

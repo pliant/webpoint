@@ -8,6 +8,10 @@
 (def mime-clojure-text "text/clojure")
 (def mime-urlencoded "application/x-www-form-urlencoded")
 
+(defn drop-leading-slash
+  [path]
+  (apply str (drop-while (partial = \/) (seq path))))
+
 (defn path
   [request]
   (or (:path-info request) (:uri request)))

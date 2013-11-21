@@ -6,17 +6,16 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   
   :source-paths ["src/clj"]
-  ;;:java-source-paths ["src/java"]
   :test-paths ["test/clj"]
   
   ;; Keep java source and project definition out of the artifact
   :jar-exclusions [#"^\." #"^*\/\." #"\.java$" #"project\.clj"]
 
-  :dependencies [[pliant/process "0.1.1-SNAPSHOT"]
+  :dependencies [[pliant/process "0.1.1"]
                  [org.clojure/clojure "1.4.0"]
                  [compojure "1.1.6"]
                  [ring/ring-core "1.2.1"]
                  [org.clojure/tools.logging "0.2.6"]
                  [org.clojure/data.json "0.2.3"]]
   
-  :profiles {:dev {:dependencies [[javax.servlet/servlet-api "2.5"]]} })
+  :profiles {:provided {:dependencies [[javax.servlet/servlet-api "2.5"]]} })

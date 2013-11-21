@@ -17,11 +17,13 @@
   (fn [request]
     (if-not (= :get (:request-method request))
       (handler request)
-      (let [uri-path (path request)
-            path (.substring ^String (codec/url-decode uri-path) 1)]
+      (if-let [path (-> request
+                      path
+                      codec/url-decode
+                      drop-leading-slash)]
         (or (ring/resource-response path {:root root-path})
-            (handler request))))))
-
+            (handler request))
+        (handler request)))))
 
 (defn inject-routes
   [& middlewares]

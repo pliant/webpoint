@@ -1,4 +1,4 @@
-(defproject pliant/webpoint "0.1.1"
+(defproject pliant/webpoint "0.1.1-SNAPSHOT"
   :description "Provides a library that simplifies handling of web requests by matching the method and URL against a multimethod value."
   
   :url "https://github.com/pliant/webpoint"

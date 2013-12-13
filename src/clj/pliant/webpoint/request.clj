@@ -7,27 +7,24 @@
             [ring.util.response :as ring]))
 
 
-(defmulti endpoints 
-  (fn [{:keys [request-method] :as request}] 
-    (uri->process-name (name request-method) (path request))))
+(defmulti endpoints request->process-name)
 
 (defmethod endpoints :default
-  [{:keys [request-method] :as request}]
-  (let [contype (or (:content-type request) "")
-        proc-name (uri->process-name (name request-method) (path request))
-        message (str "Unable to find a process registered as '" proc-name "'.")]
-    (cond
-      (or (json-requested? contype) (clojure-requested? contype))
-        (ring/not-found {:message message})
-      :else
-        (ring/content-type 
-          (ring/not-found (str "<html><head><title>Process Not Found</title></head><body><h1>Process Not Found</h1><h3>" 
-                                  message "</h3></body></html>")) mime-html))))
+  [request]
+  (if (expects-data? request)
+    (ring/status 
+      (response/respond-with-data 
+        {:message (str "Unable to find a process registered as '" (request->process-name request) "'.")} request) 404)
+    (ring/not-found 
+      (str "<html><head><title>Process Not Found</title></head><body>
+            <h3>Unable to find a process registered as " (request->process-name request) "'.</h3></body></html>"))))
 
 (defn route 
   "Routes a request to a functional endpoint."
   [request]
-  (try 
-    (response/respond request (endpoints request))
+  (try
+    (-> request
+      endpoints
+      (response/respond request))
     (catch Exception e
       (response/on-exception e request))))

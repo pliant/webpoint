@@ -25,9 +25,10 @@
             (handler request))
         (handler request)))))
 
-(defn inject-routes
-  [& middlewares]
-  (reduce #(%2 %1) request/route middlewares))
+
+#_(defn inject-routes
+   [& middlewares]
+   (reduce #(%2 %1) request/route middlewares))
 
 ;; ---------- ---------- ---------- ---------- ---------- ---------- ----------
 ;; Keyify parameters middleware.
@@ -67,6 +68,7 @@
                       \tab "REQUEST KEYS: " (keys request) \newline
                       \tab "METHOD:       " (:request-method request) \newline
                       \tab "URI:          " (:uri request) \newline
+                      \tab "HEADERS:      " (:headers request) \newline
                       \tab "CONTENT-TYPE: " (:content-type request) \newline
                       \tab "CONTEXT:      " (:context request) \newline
                       \tab "PATH-INFO:    " (:path-info request) \newline

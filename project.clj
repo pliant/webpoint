@@ -10,10 +10,11 @@
   
   ;; Keep java source and project definition out of the artifact
   :jar-exclusions [#"^\." #"^*\/\." #"\.java$" #"project\.clj"]
+  
+  :signing {:gpg-key "B42493D5"}
 
   :dependencies [[pliant/process "0.1.1"]
                  [org.clojure/clojure "1.4.0"]
-                 [compojure "1.1.6"]
                  [ring/ring-core "1.2.1"]
                  [org.clojure/tools.logging "0.2.6"]
                  [org.clojure/data.json "0.2.3"]]
